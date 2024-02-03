@@ -1,6 +1,12 @@
+import csv
+import itertools
+
+import matplotlib.pyplot as plt
 import numpy as np
+import seaborn as sns
 from sklearn.metrics import accuracy_score
 
+from models.mlp_model import MLP
 from utilities import binary_cross_entropy_loss
 
 
@@ -18,7 +24,6 @@ def train(
         y_train_shuffled = y_train[permutation]
 
         for i in range(0, X_train.shape[0], batch_size):
-            # Mini-batch data
             X_train_batch = X_train_shuffled[i : i + batch_size]
             y_train_batch = y_train_shuffled[i : i + batch_size]
 
@@ -34,7 +39,7 @@ def train(
             model.W1 -= lr * dW1
             model.W2 -= lr * dW2
 
-        if epoch % 10 == 0:
+        if epoch % 50 == 0:
             print(f"Epoch {epoch}, Loss: {loss}")
 
         # Record training loss and accuracy
@@ -54,3 +59,70 @@ def train(
         val_accuracies.append(val_accuracy)
 
     return train_losses, train_accuracies, val_losses, val_accuracies
+
+
+def perform_hyperparameter_search(
+    hidden_layer_sizes,
+    batch_sizes,
+    learning_rates,
+    epoch_values,
+    X_train,
+    y_train,
+    X_valid,
+    y_valid,
+    csv_filename,
+    dataset,
+):
+    sns.set(style="whitegrid")
+
+    for k, batch_size, lr, epochs in itertools.product(
+        hidden_layer_sizes, batch_sizes, learning_rates, epoch_values
+    ):
+        model = MLP(input_size=X_train.shape[1], hidden_size=k)
+        train_losses, train_accuracies, val_losses, val_accuracies = train(
+            model,
+            X_train,
+            y_train,
+            X_valid,
+            y_valid,
+            lr=lr,
+            epochs=epochs,
+            batch_size=batch_size,
+        )
+
+        # Plot training and validation losses
+        plt.figure(figsize=(12, 5))
+
+        plt.subplot(1, 2, 1)
+        sns.lineplot(data=train_losses, label="Train Loss")
+        sns.lineplot(data=val_losses, label="Validation Loss")
+        plt.title(f"Losses for k={k}, Batch={batch_size}, LR={lr}, Epochs={epochs}")
+        plt.xlabel("Epochs")
+        plt.ylabel("Loss")
+
+        plt.subplot(1, 2, 2)
+        sns.lineplot(data=train_accuracies, label="Train Accuracy")
+        sns.lineplot(data=val_accuracies, label="Validation Accuracy")
+        plt.title(f"Accuracies for k={k}, Batch={batch_size}, LR={lr}, Epochs={epochs}")
+        plt.xlabel("Epochs")
+        plt.ylabel("Accuracy")
+
+        plt.savefig(
+            f"images/{dataset}/k_{k}_batch_{batch_size}_lr_{lr}_epochs_{epochs}.png"
+        )
+        plt.close()
+
+        with open(csv_filename, mode="a", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerow(
+                [
+                    k,
+                    batch_size,
+                    lr,
+                    epochs,
+                    train_losses[-1],
+                    val_losses[-1],
+                    train_accuracies[-1],
+                    val_accuracies[-1],
+                ]
+            )
