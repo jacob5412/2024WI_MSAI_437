@@ -1,4 +1,5 @@
 import numpy as np
+from sklearn.metrics import accuracy_score
 
 from utilities import binary_cross_entropy_loss
 
@@ -37,16 +38,18 @@ def train(
             print(f"Epoch {epoch}, Loss: {loss}")
 
         # Record training loss and accuracy
-        train_pred = model.predict(X_train)
-        train_loss = binary_cross_entropy_loss(y_train, train_pred)
-        train_accuracy = np.mean(train_pred == y_train.squeeze())
+        train_output = model.forward(X_train)
+        train_pred_labels = (train_output > 0.5).astype(int)
+        train_loss = binary_cross_entropy_loss(y_train, train_output)
+        train_accuracy = accuracy_score(y_train.squeeze(), train_pred_labels)
         train_losses.append(train_loss)
         train_accuracies.append(train_accuracy)
 
         # Validation step
-        val_pred = model.predict(X_valid)
-        val_loss = binary_cross_entropy_loss(y_valid, val_pred)
-        val_accuracy = np.mean(val_pred == y_valid.squeeze())
+        val_output = model.forward(X_valid)
+        val_pred_labels = (val_output > 0.5).astype(int)
+        val_loss = binary_cross_entropy_loss(y_valid, val_output)
+        val_accuracy = accuracy_score(y_valid.squeeze(), val_pred_labels)
         val_losses.append(val_loss)
         val_accuracies.append(val_accuracy)
 
