@@ -1,4 +1,5 @@
 import numpy as np
+
 from utilities import (
     initialize_weights,
     sigmoid,
@@ -23,9 +24,24 @@ class MLP:
         output = sigmoid(self.Z2)
         return output
 
-    def backward(self, X, error, model):
-        dZ2 = error * sigmoid_derivative(model.Z2)
-        dW2 = np.dot(model.A1.T, dZ2)
-        dZ1 = np.dot(dZ2, model.W2[1:].T) * tanh_derivative(model.Z1)
-        dW1 = np.dot(X.T, dZ1)
+    def backward(self, X, loss_derivative):
+        dZ2 = loss_derivative * sigmoid_derivative(self.Z2)
+        A1_bias = np.insert(self.A1, 0, 1, axis=1)
+        dW2 = np.dot(A1_bias.T, dZ2)
+
+        dZ1 = np.dot(dZ2, self.W2[1:, :].T) * tanh_derivative(self.Z1)
+        X_bias = np.insert(X, 0, 1, axis=1)
+        dW1 = np.dot(X_bias.T, dZ1)
+
         return dW1, dW2
+
+    def predict(self, X):
+        X_bias = np.insert(X, 0, 1, axis=1)
+        Z1 = np.dot(X_bias, self.W1)
+        A1 = tanh(Z1)
+        A1_bias = np.insert(A1, 0, 1, axis=1)
+        Z2 = np.dot(A1_bias, self.W2)
+        output = sigmoid(Z2)
+
+        predictions = (output > 0.5).astype(int)
+        return predictions.squeeze()
