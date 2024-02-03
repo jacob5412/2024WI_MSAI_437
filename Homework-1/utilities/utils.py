@@ -29,3 +29,7 @@ def binary_cross_entropy_loss(y_true, y_pred):
         y_true
     )
     return loss
+
+
+def mean_square_error_loss(y_true, y_pred):
+    return ((y_pred - y_true) ** 2).mean()
