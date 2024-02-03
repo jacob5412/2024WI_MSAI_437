@@ -10,12 +10,11 @@ def sigmoid(x):
 
 
 def tanh(x):
-    return 2 * sigmoid(2 * x) - 1
+    return np.tanh(x)
 
 
 def tanh_derivative(x):
-    tanh_x = tanh(x)
-    return 1 - tanh_x**2
+    return 1 - np.tanh(x) ** 2
 
 
 def sigmoid_derivative(x):

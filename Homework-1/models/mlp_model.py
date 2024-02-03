@@ -1,5 +1,4 @@
 import numpy as np
-
 from utilities import (
     initialize_weights,
     sigmoid,
