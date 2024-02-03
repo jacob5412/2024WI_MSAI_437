@@ -161,3 +161,5 @@ cython_debug/
 
 # Project files
 *.DS_Store
+Homework-1/images/*
+.vscode
