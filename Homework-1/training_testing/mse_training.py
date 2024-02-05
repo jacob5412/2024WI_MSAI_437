@@ -141,7 +141,7 @@ def perform_hyperparameter_search(
         plt.ylabel("Accuracy")
 
         plt.savefig(
-            f"images/{dataset}/cross_entropy_k_{k}_batch_{batch_size}_lr_{lr}_epochs_{epochs}.png"
+            f"images/{dataset}/mse_k_{k}_batch_{batch_size}_lr_{lr}_epochs_{epochs}.png"
         )
         plt.close()
 
