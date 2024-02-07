@@ -61,6 +61,6 @@ def plot_decision_boundary(model, X_test, y_test, test_pred, dataset):
     plt.xlim(xx.min(), xx.max())
     plt.ylim(yy.min(), yy.max())
 
-    plt.savefig(f"results/{dataset}/mse_decision_boundary.png")
+    plt.savefig(f"results/{dataset}/reg_decision_boundary.png")
     plt.show()
     plt.close()
