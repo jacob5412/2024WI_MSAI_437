@@ -27,7 +27,7 @@ def plot_decision_boundary(X_test, y_test, test_pred, dataset):
         label="Incorrectly Classified",
     )
 
-    plt.title(f"{dataset} errors mean-squared error)")
+    plt.title(f"{dataset} errors (mean-squared error)")
     plt.legend(title="Legend", loc="upper right")
 
     plt.savefig(f"results/{dataset}/rbf_decision_boundary.png")
