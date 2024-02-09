@@ -50,7 +50,9 @@ def train(
 
             # Backward Pass (backpropagation)
             loss = binary_cross_entropy_loss(y_train_batch, output)
-            loss_derivative = output - y_train_batch
+            loss_derivative = (output - y_train_batch) / (
+                output - output**2 + 1e-7
+            )  # numerical stability
             dW1, dW2 = model.backward(X_train_batch, loss_derivative)
 
             # Update Weights
