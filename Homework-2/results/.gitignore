@@ -1,0 +1,3 @@
+# ignore weights
+*.npy
+*.pth
