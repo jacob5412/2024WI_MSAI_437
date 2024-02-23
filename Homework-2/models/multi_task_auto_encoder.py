@@ -6,26 +6,23 @@ class MultiTaskAutoEncoder(nn.Module):
         self,
         latent_size,
         input_channels=3,
-        encoder_channels=[16, 32],
+        hidden_layer_1=32,
+        hidden_layer_2=16,
         kernel_size=3,
         stride=2,
         padding=1,
         num_classes=3,
-        flattened_latent_size=2048,
+        flattened_latent_size=1024,
     ):
         super(MultiTaskAutoEncoder, self).__init__()
 
         # Encoder layers
         self.encoder = nn.Sequential(
-            nn.Conv2d(
-                input_channels, encoder_channels[0], kernel_size, stride, padding
-            ),
+            nn.Conv2d(input_channels, hidden_layer_1, kernel_size, stride, padding),
             nn.ReLU(),
-            nn.Conv2d(
-                encoder_channels[0], encoder_channels[1], kernel_size, stride, padding
-            ),
+            nn.Conv2d(hidden_layer_1, hidden_layer_2, kernel_size, stride, padding),
             nn.ReLU(),
-            nn.Conv2d(encoder_channels[1], latent_size, kernel_size, stride, padding),
+            nn.Conv2d(hidden_layer_2, latent_size, kernel_size, stride, padding),
             nn.LeakyReLU(),
         )
 
@@ -33,7 +30,7 @@ class MultiTaskAutoEncoder(nn.Module):
         self.decoder = nn.Sequential(
             nn.ConvTranspose2d(
                 latent_size,
-                encoder_channels[1],
+                hidden_layer_2,
                 kernel_size,
                 stride,
                 padding,
@@ -41,8 +38,8 @@ class MultiTaskAutoEncoder(nn.Module):
             ),
             nn.ReLU(),
             nn.ConvTranspose2d(
-                encoder_channels[1],
-                encoder_channels[0],
+                hidden_layer_2,
+                hidden_layer_1,
                 kernel_size,
                 stride,
                 padding,
@@ -50,7 +47,7 @@ class MultiTaskAutoEncoder(nn.Module):
             ),
             nn.ReLU(),
             nn.ConvTranspose2d(
-                encoder_channels[0],
+                hidden_layer_1,
                 input_channels,
                 kernel_size,
                 stride,
