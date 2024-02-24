@@ -59,9 +59,9 @@ class MultiTaskAutoEncoder(nn.Module):
 
         # Classification head
         self.classifier = nn.Sequential(
-            nn.Linear(flattened_latent_size, 128),
+            nn.Linear(flattened_latent_size, 32),
             nn.ReLU(),
-            nn.Linear(128, num_classes),
+            nn.Linear(32, num_classes),
         )
 
     def forward(self, x):
