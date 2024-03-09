@@ -36,6 +36,9 @@ class Vocabulary:
             self.size += 1
         return self.token_to_idx[token]
 
+    def itos(self, index):
+        return self.idx_to_token[index] if index < len(self.idx_to_token) else "<unk>"
+
     def numericalize(self, tokens):
         """
         Converts a list of tokens into their corresponding indices.
