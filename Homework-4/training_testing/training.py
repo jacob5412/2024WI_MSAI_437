@@ -3,7 +3,6 @@ import time
 
 import matplotlib.pyplot as plt
 import torch
-
 from utils.batchifier import get_batch
 from utils.modeler import repackage_hidden
 

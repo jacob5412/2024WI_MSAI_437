@@ -1,6 +1,7 @@
 import random
 from collections import defaultdict
 
+
 def augment_dataset_with_replacement(dataset, target_size, augmentation_transforms):
     """
     Augment images class-wise until each class reaches the desired size.
@@ -18,7 +19,9 @@ def augment_dataset_with_replacement(dataset, target_size, augmentation_transfor
         augment_count = max(target_per_class - count, 0)
 
         # Get indices of all images in this class
-        class_indices = [i for i, example in enumerate(dataset) if example["class"] == class_label]
+        class_indices = [
+            i for i, example in enumerate(dataset) if example["class"] == class_label
+        ]
 
         # Augment images for this class
         while augment_count > 0:
